@@ -1,13 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
-#ifdef _WIN32
-	#include <GL/wglew.h>
-#elif defined(__linux__)
-	#include <GL/glxew.h>
-#elif
-	#error "Unsupported platform :("
-#endif
+#include <glad/glad.h>
 
 #include <Logger.hpp>
 

@@ -164,6 +164,7 @@ endif(CCACHE_FOUND AND COMMAND cotire)
 ##
 add_subdirectory(Core)
 add_subdirectory(Engine)
+add_subdirectory(ThirdParty/glad)
 add_subdirectory(Games/CzolgInvaders)
 add_subdirectory(Games/SGJGame)
 add_subdirectory(RenderingDevice/OpenGL)
