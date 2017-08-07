@@ -1,13 +1,12 @@
 #pragma once
 
-#include <GL/glew.h>
-#ifdef _WIN32
-	#include <GL/wglew.h>
-#elif defined(__linux__)
-	#include <GL/glxew.h>
-#elif
-	#error "Unsupported platform :("
-#endif
+//#include <glbinding/gl33core/enum.h>
+//#include <glbinding/gl33core/functions.h>
+//#include <glbinding/gl33core/types.h>
+//using namespace gl33core
+
+#include <glbinding/gl/gl.h>
+using namespace gl;
 
 #include <Logger.hpp>
 

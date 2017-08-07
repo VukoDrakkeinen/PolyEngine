@@ -15,9 +15,8 @@ static GLenum GetGLDataFormat(eTextureDataFormat format) noexcept
 	case Poly::eTextureDataFormat::RGBA:
 		return GL_RGBA;
 	default:
-		ASSERTE(false, "Invalid format!");
+		ASSERTE(false, "Invalid format!"); throw;
 	}
-	return 0;
 }
 
 //---------------------------------------------------------------
@@ -30,13 +29,12 @@ static GLenum GetGLInternalFormat(eTextureUsageType usage) noexcept
 	case Poly::eTextureUsageType::FONT:
 		return GL_RED;
 	default:
-		ASSERTE(false, "Invalid usage!");
+		ASSERTE(false, "Invalid usage!"); throw;
 	}
-	return 0;
 }
 
 //-------------------------------------------------------------- -
-Poly::GLTextureDeviceProxy::GLTextureDeviceProxy(size_t width, size_t height, eInternalTextureUsageType internalUsage, GLuint internalFormat)
+Poly::GLTextureDeviceProxy::GLTextureDeviceProxy(size_t width, size_t height, eInternalTextureUsageType internalUsage, GLenum internalFormat)
 	: Width(width), Height(height), InternalUsage(internalUsage), InternalFormat(internalFormat)
 {
 	InitTextureParams();
@@ -72,13 +70,13 @@ void GLTextureDeviceProxy::SetContent(eTextureDataFormat format, const unsigned 
 	{
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 	CHECK_GL_ERR();
 }
 
 //---------------------------------------------------------------
-void GLTextureDeviceProxy::SetSubContent(size_t width, size_t height, 
+void GLTextureDeviceProxy::SetSubContent(size_t width, size_t height,
 	size_t offsetX, size_t offsetY, eTextureDataFormat format, const unsigned char* data)
 {
 	ASSERTE(width + offsetX <= Width && height + offsetY <= Height && width > 0 && height > 0, "Invalid arguments!");
@@ -136,9 +134,9 @@ void Poly::GLTextureDeviceProxy::InitTextureParams()
 
 	if (InternalUsage == eInternalTextureUsageType::COLOR_ATTACHEMENT || InternalUsage == eInternalTextureUsageType::DEPTH_ATTACHEMENT)
 	{
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	} 
+		glTexParametere(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParametere(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
 	else if (Usage == eTextureUsageType::FONT)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

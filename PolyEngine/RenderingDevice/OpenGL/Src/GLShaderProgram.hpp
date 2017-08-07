@@ -3,8 +3,13 @@
 #include <map>
 #include <Core.hpp>
 
-typedef unsigned int GLuint;
-typedef unsigned int GLenum;
+//#include <glbinding/gl33core/types.h>
+//
+//using GLuint = gl33core::GLuint;
+//using GLenum = gl33core::GLenum;
+
+#include <glbinding/gl/gl.h>
+using namespace gl;
 
 namespace Poly {
 	class GLShaderProgram : public BaseObject<>

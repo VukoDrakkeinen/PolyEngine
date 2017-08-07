@@ -69,7 +69,7 @@ void Poly::RenderingPassBase::DebugDraw()
 			{
 				glReadBuffer(GL_COLOR_ATTACHMENT0 + count);
 				glBlitFramebuffer(0, 0, screenSize.Width, screenSize.Height,
-					0, count * divH, screenSize.Width / drawDivisor, (count + 1) * divH, 
+					0, count * divH, screenSize.Width / drawDivisor, (count + 1) * divH,
 					GL_COLOR_BUFFER_BIT, GL_LINEAR);
 				++count;
 			}
@@ -80,7 +80,7 @@ void Poly::RenderingPassBase::DebugDraw()
 }
 
 //------------------------------------------------------------------------------
-void Poly::RenderingPassBase::ClearFBO(GLenum flags)
+void Poly::RenderingPassBase::ClearFBO(ClearBufferMask flags)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
 	glClear(flags);
@@ -151,7 +151,7 @@ void RenderingPassBase::Run(World* world, const CameraComponent* camera, const A
 
 	// bind outputs (by binding fbo)
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
-	
+
 	// call run implementation
 	OnRun(world, camera, rect);
 }
@@ -161,14 +161,14 @@ void RenderingPassBase::Finalize()
 {
 	if (GetOutputs().size() == 0)
 		return; // we want the default FBO == 0, which is the screen buffer
-	
+
 	ASSERTE(FBO == 0, "Calling finalize twice!");
 	glGenFramebuffers(1, &FBO);
 	ASSERTE(FBO > 0, "Failed to create FBO!");
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
 	bool foundDepth = false;
-	
+
 	Dynarray<GLenum> colorAttachements;
 	for (auto& kv : GetOutputs())
 	{
@@ -229,12 +229,12 @@ RenderingTargetBase* RenderingPassBase::GetOutputTarget(const String& name)
 	return nullptr;
 }
 
-Poly::Texture2DRenderingTarget::Texture2DRenderingTarget(GLuint format)
+Poly::Texture2DRenderingTarget::Texture2DRenderingTarget(GLenum format)
 	: Texture2DRenderingTarget(format, eInternalTextureUsageType::COLOR_ATTACHEMENT)
 {
 }
 
-Poly::Texture2DRenderingTarget::Texture2DRenderingTarget(GLuint format, eInternalTextureUsageType internalUsage)
+Poly::Texture2DRenderingTarget::Texture2DRenderingTarget(GLenum format, eInternalTextureUsageType internalUsage)
 	: Format(format), InternalUsage(internalUsage)
 {
 	ScreenSize size = gRenderingDevice->GetScreenSize();

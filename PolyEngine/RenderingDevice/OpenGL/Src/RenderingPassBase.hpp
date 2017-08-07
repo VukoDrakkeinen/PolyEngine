@@ -40,7 +40,7 @@ namespace Poly
 
 		void DebugDraw();
 
-		void ClearFBO(GLenum flags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		void ClearFBO(ClearBufferMask flags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	protected:
 		virtual void OnRun(World* world, const CameraComponent* camera, const AABox& rect) = 0;
 
@@ -81,15 +81,15 @@ namespace Poly
 	class Texture2DRenderingTarget : public RenderingTargetBase
 	{
 	public:
-		Texture2DRenderingTarget(GLuint format);
-		Texture2DRenderingTarget(GLuint format, eInternalTextureUsageType internalUsage);
+		Texture2DRenderingTarget(GLenum format);
+		Texture2DRenderingTarget(GLenum format, eInternalTextureUsageType internalUsage);
 
 		eRenderingTargetType GetType() const override { return eRenderingTargetType::TEXTURE_2D; }
 		void Resize(const ScreenSize& size) override;
 
 		GLuint GetTextureID();
 	private:
-		GLuint Format;
+		GLenum Format;
 		eInternalTextureUsageType InternalUsage = eInternalTextureUsageType(0);
 		std::unique_ptr<GLTextureDeviceProxy> Texture;
 	};
@@ -108,7 +108,7 @@ namespace Poly
 	public:
 		Texture2DInputTarget(const String& path);
 		~Texture2DInputTarget();
-		
+
 		GLuint GetTextureID() const;
 		eRenderingTargetType GetType() const override { return eRenderingTargetType::TEXTURE_2D_INPUT; }
 	private:

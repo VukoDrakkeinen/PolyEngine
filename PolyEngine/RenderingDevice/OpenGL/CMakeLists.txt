@@ -1,9 +1,4 @@
-find_package(OpenGL REQUIRED)
-if(WIN32)
-	list(APPEND CMAKE_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/glew/include")
-	list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/glew/lib/Release/x64/" "${CMAKE_SOURCE_DIR}/ThirdParty/glew/lib/Release/Win32/")
-endif()
-find_package(GLEW REQUIRED)
+find_package(glbinding REQUIRED)
 
 set(POLYGLDEVICE_SRCS
 	Src/BlinnPhongRenderingPass.cpp
@@ -37,8 +32,8 @@ set(POLYGLDEVICE_H_FOR_IDE
 
 add_library(polygldevice SHARED ${POLYGLDEVICE_SRCS} ${POLYGLDEVICE_H_FOR_IDE})
 target_compile_definitions(polygldevice PRIVATE _DEVICE)
-target_include_directories(polygldevice INTERFACE ${POLYGLDEVICE_INCLUDE} PRIVATE ${OPENGL_INCLUDE_DIR})
-target_link_libraries(polygldevice PRIVATE polycore polyengine ${OPENGL_LIBRARIES} GLEW::GLEW )
+target_include_directories(polygldevice INTERFACE ${POLYGLDEVICE_INCLUDE})
+target_link_libraries(polygldevice PRIVATE polycore polyengine glbinding::glbinding)
 
 if(GENERATE_COVERAGE AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 	target_compile_options(polygldevice PRIVATE --coverage -fprofile-arcs -ftest-coverage)
@@ -50,5 +45,6 @@ if(GENERATE_COVERAGE AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 	)
 endif(GENERATE_COVERAGE AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 
-#set_target_properties(polygldevice PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "Src/EnginePCH.hpp")
-cotire(polygldevice)
+#set_target_properties(polygldevice PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
+#cotire(polygldevice)
+#makes it impossible to prevent inclusion of GL headers which macro the fuck out of everything and break stuff in the process
