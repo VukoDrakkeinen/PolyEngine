@@ -142,32 +142,14 @@ GLRenderingDevice::GLRenderingDevice(Display* display, Window window, GLXFBConfi
 
 	ScreenDim = size;
 
-	//create a temporary context to make GLEW happy, then immediately destroy it (it has wrong parameters)
-	{
-		GLXContext makeGlewHappy = glXCreateNewContext(this->display, fbConfig, GLX_RGBA_TYPE, /*share list*/ nullptr, /*direct*/ True);
-		glXMakeCurrent(this->display, this->window, makeGlewHappy);
-		gConsole.LogDebug("Temporary GL context for GLEW created.");
-
-		//initialize GLEW
-		GLenum err = glewInit();
-		if (err != GLEW_OK) {
-			gConsole.LogError("GLEW init failed, code: {}, status: {}", err, glewGetErrorString(err));
-			throw RenderingDeviceSetupFailedException();
-		}
-		glXMakeCurrent(this->display, None, nullptr);
-		glXDestroyContext(this->display, makeGlewHappy);
-		gConsole.LogDebug("GLEW initialized.");
-	}
-
 	//create GLX OpenGL context
-	this->context = nullptr;
 	int context_attribs[] = {
 		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
 		GLX_CONTEXT_MINOR_VERSION_ARB, 3,
 		GLX_CONTEXT_FLAGS_ARB        , GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 		None
 	};
-	if (GLXEW_ARB_create_context) {
+	if (glXCreateContextAttribsARB) {
 		this->context = glXCreateContextAttribsARB(this->display, fbConfig, /*share context*/ nullptr, /*direct*/ True, context_attribs);
 	}
 	else {
@@ -278,7 +260,7 @@ void GLRenderingDevice::InitPrograms()
 	RegisterGeometryPass<DebugNormalsRenderingPass>(eGeometryRenderPassType::DEBUG_NORMALS);
 	RegisterGeometryPass<Text2DRenderingPass>(eGeometryRenderPassType::TEXT_2D, {}, { { "color", texture },{ "depth", depth } });
 	RegisterGeometryPass<TransparentRenderingPass>(eGeometryRenderPassType::TRANSPARENT_GEOMETRY, {}, { { "color", texture },{ "depth", depth } });
-	
+
 
 	RegisterPostprocessPass(ePostprocessRenderPassType::BACKGROUND,			"Shaders/bgFrag.shader",		{}, { { "o_color", texture },	{ "depth", depth } });
 	RegisterPostprocessPass(ePostprocessRenderPassType::BACKGROUND_LIGHT,	"Shaders/bgLightFrag.shader",	{}, { { "o_color", texture },	{ "depth", depth } });

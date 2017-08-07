@@ -1,11 +1,11 @@
 #pragma once
 
-#include <GL/glew.h>
-#ifdef _WIN32
-	#include <GL/wglew.h>
+#include <epoxy/gl.h>
+#if defined(_WIN32)
+	#include <epoxy/wgl.h>
 #elif defined(__linux__)
-	#include <GL/glxew.h>
-#elif
+	#include <epoxy/glx.h>
+#else
 	#error "Unsupported platform :("
 #endif
 
