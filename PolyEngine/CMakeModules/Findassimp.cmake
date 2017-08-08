@@ -53,17 +53,24 @@ if(WIN32)
 
 else(WIN32)
 
+	find_package(PkgConfig)
+	pkg_search_module(PKG_assimp REQUIRED assimp>=3.0 assimp3.0)
+
+	set(assimp_DEFINITIONS ${PKG_assimp_CFLAGS})
+
 	find_path(
-	  ASSIMP_INCLUDE_DIRS
-	  NAMES postprocess.h scene.h version.h config.h cimport.h
-	  PATHS /usr/local/include/
-	  PATH_SUFFIXES assimp
+		ASSIMP_INCLUDE_DIRS
+		NAMES postprocess.h scene.h version.h config.h cimport.h
+		PATHS /usr/local/include/
+		PATH_SUFFIXES assimp
+		HINTS ${PKG_assimp_INCLUDEDIR} ${PKG_assimp_INCLUDE_DIRS}
 	)
 
 	find_library(
-	  ASSIMP_LIBRARIES
-	  NAMES assimp assimp3.0
-	  PATHS /usr/local/include/
+		ASSIMP_LIBRARIES
+		NAMES assimp assimp3.0
+		PATHS /usr/local/include/
+		HINTS ${PKG_assimp_LIBDIR} ${PKG_assimp_LIBRARY_DIRS}
 	)
 
 endif(WIN32)

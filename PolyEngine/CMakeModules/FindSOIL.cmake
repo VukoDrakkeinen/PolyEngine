@@ -20,7 +20,8 @@
 #   SOIL_LIBRARIES - libraries to link against SOIL
 #   SOIL_FOUND - true if SOIL has been found and can be used
 
-find_package(OpenGL REQUIRED)
+include(CMakeFindDependencyMacro)
+find_dependency(OpenGL)
 
 find_path(SOIL_INCLUDE_DIR SOIL/SOIL.h)
 
