@@ -33,7 +33,7 @@ set(POLYGLDEVICE_H_FOR_IDE
 add_library(polygldevice SHARED ${POLYGLDEVICE_SRCS} ${POLYGLDEVICE_H_FOR_IDE})
 target_compile_definitions(polygldevice PRIVATE _DEVICE)
 target_include_directories(polygldevice INTERFACE ${POLYGLDEVICE_INCLUDE})
-target_link_libraries(polygldevice PRIVATE polycore polyengine ${epoxy_LIBRARY})
+target_link_libraries(polygldevice PRIVATE polycore polyengine epoxy::gl)
 
 if(GENERATE_COVERAGE AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 	target_compile_options(polygldevice PRIVATE --coverage -fprofile-arcs -ftest-coverage)

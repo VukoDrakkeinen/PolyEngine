@@ -52,12 +52,14 @@ namespace Poly
 		//------------------------------------------------------------------------------
 		static T* Load(const String& path, eResourceSource source = eResourceSource::NONE)
 		{
+			gConsole.LogDebug("Manager loading {} with source {}", path, (int)source);
 			auto it = Impl::GetResources<T>().find(path);
 
 			// Check if it is already loaded
 			if (it != Impl::GetResources<T>().end())
 			{
 				T* resource = it->second.get();
+				gConsole.LogDebug("Already loaded at {}", (void*) resource);
 				resource->AddRef();
 				return resource;
 			}
@@ -65,22 +67,21 @@ namespace Poly
 			// Load the resource
 			T* resource = nullptr;
 			Dynarray<String> paths = (source == eResourceSource::NONE) ? Dynarray<String>({String()}) : gAssetsPathConfig.GetAssetsPaths(source);
-			for (int i = 0; i < paths.GetSize() && !resource; ++i)
+			for (int i = 0; i < paths.GetSize(); ++i)
 			{
 				String absolutePath = paths[i] + path;
+				gConsole.LogDebug("Trying path: {}", absolutePath);
 
 				try
 				{
-					resource = new T(absolutePath);
-				}
-				catch (const ResourceLoadFailedException& e)
-				{
-					UNUSED(e);
+					auto new_resource = new T(absolutePath);
+					resource = new_resource;
+					break;
+				} catch (const ResourceLoadFailedException&) {
+					gConsole.LogDebug("Fail RLFE");
 					resource = nullptr;
-				}
-				catch (const std::exception& e)
-				{
-					UNUSED(e);
+				} catch (const std::exception&) {
+					gConsole.LogDebug("Fail std");
 					HEAVY_ASSERTE(false, "Resource creation failed for unknown reason!");
 					return nullptr;
 				}

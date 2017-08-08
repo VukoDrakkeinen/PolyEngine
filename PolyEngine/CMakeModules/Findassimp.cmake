@@ -80,8 +80,31 @@ if (ASSIMP_FOUND)
 	if (NOT assimp_FIND_QUIETLY)
 		message(STATUS "Found asset importer library: ${ASSIMP_LIBRARIES}")
 	endif (NOT assimp_FIND_QUIETLY)
+
+	if (NOT TARGET ass::imp)
+		add_library(ass::imp UNKNOWN IMPORTED)
+		set_target_properties(ass::imp PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${ASSIMP_INCLUDE_DIRS}")
+
+		if(ASSIMP_LIBRARY_RELEASE)
+			set_property(TARGET ass::imp APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+			set_target_properties(ass::imp PROPERTIES IMPORTED_LOCATION_RELEASE "${ASSIMP_LIBRARY_RELEASE}")
+		endif()
+
+		if(ASSIMP_LIBRARY_DEBUG)
+			set_property(TARGET ass::imp APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+			set_target_properties(ass::imp PROPERTIES IMPORTED_LOCATION_DEBUG "${ASSIMP_LIBRARY_DEBUG}")
+		endif()
+
+		if(NOT ASSIMP_LIBRARY_RELEASE AND NOT ASSIMP_LIBRARY_DEBUG)
+			set_property(TARGET ass::imp APPEND PROPERTY IMPORTED_LOCATION "${ASSIMP_LIBRARIES}")
+		endif()
+
+	endif()
+
 else (ASSIMP_FOUND)
 	if (assimp_FIND_REQUIRED)
 		message(FATAL_ERROR "Could not find asset importer library")
 	endif (assimp_FIND_REQUIRED)
 endif (ASSIMP_FOUND)
+
+mark_as_advanced(ASSIMP_INCLUDE_DIRS ASSIMP_LIBRARIES)

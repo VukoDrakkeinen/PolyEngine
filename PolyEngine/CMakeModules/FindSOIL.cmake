@@ -20,6 +20,8 @@
 #   SOIL_LIBRARIES - libraries to link against SOIL
 #   SOIL_FOUND - true if SOIL has been found and can be used
 
+find_package(OpenGL REQUIRED)
+
 find_path(SOIL_INCLUDE_DIR SOIL/SOIL.h)
 
 if(NOT SOIL_LIBRARY)
@@ -57,6 +59,8 @@ if(SOIL_FOUND)
 		if(NOT SOIL_LIBRARY_RELEASE AND NOT SOIL_LIBRARY_DEBUG)
 			set_property(TARGET SOIL::SOIL APPEND PROPERTY IMPORTED_LOCATION "${SOIL_LIBRARY}")
 		endif()
+
+		set_property(TARGET SOIL::SOIL APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${OPENGL_LIBRARIES})
 	endif()
 endif()
 
