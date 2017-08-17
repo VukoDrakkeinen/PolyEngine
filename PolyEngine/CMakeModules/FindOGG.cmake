@@ -48,9 +48,9 @@ else ()
 	set(LIB_HINTS       ${PKG_OGG_LIBDIR}     ${PKG_OGG_LIBRARY_DIRS})
 endif()
 
-find_path(OGG_INCLUDE_DIR         NAMES ogg/ogg.h ogg/os_types.h                          HINTS ${INCLUDE_HINTS})
-find_library(OGG_LIBRARY_RELEASE  NAMES ogg ogg_static                                    HINTS ${LIB_HINTS})
-find_library(OGG_LIBRARY_DEBUG    NAMES oggd ogg_d oggd_static ogg_d_static ogg_static_d  HINTS ${LIB_HINTS})
+find_path(OGG_INCLUDE_DIR         NAMES ogg/ogg.h ogg/os_types.h    HINTS ${INCLUDE_HINTS})
+find_library(OGG_LIBRARY_RELEASE  NAMES ogg libogg libogg_static    HINTS ${LIB_HINTS})
+find_library(OGG_LIBRARY_DEBUG    NAMES ogg liboggd liboggd_static  HINTS ${LIB_HINTS})
 
 set(OGG_INCLUDE_DIRS "${OGG_INCLUDE_DIR}")
 mark_as_advanced(OGG_INCLUDE_DIR)

@@ -57,23 +57,23 @@ else()
 	find_package(PkgConfig)
 	pkg_search_module(PKG_assimp QUIET assimp>=3.0 assimp3.0)
 
-	set(INCLUDE_HINTS ${PKG_assimp_INCLUDEDIR} ${PKG_assimp_INCLUDE_DIRS}) #/usr/local/lib?
-	set(LIB_HINTS     ${PKG_assimp_LIBDIR}     ${PKG_assimp_LIBRARY_DIRS}) #PATH_SUFFIXES assimp?
+	set(INCLUDE_HINTS ${PKG_assimp_INCLUDEDIR} ${PKG_assimp_INCLUDE_DIRS})
+	set(LIB_HINTS     ${PKG_assimp_LIBDIR}     ${PKG_assimp_LIBRARY_DIRS})
 	set(assimp_DEFINITIONS ${PKG_assimp_CFLAGS})
 	set(LIB_NAMES     assimp assimp3.0)
 	set(LIB_NAMES_DBG assimp-dbg)
 endif()
 
-find_path(assimp_INCLUDE_DIR        NAMES postprocess.h scene.h version.h config.h cimport.h  HINTS ${INCLUDE_HINTS})
-find_library(assimp_LIBRARY_RELEASE NAMES ${LIB_NAMES}                                        HINTS ${LIB_HINTS})
-find_library(assimp_LIBRARY_DEBUG   NAMES ${LIB_NAMES_DBG}                                    HINTS ${LIB_HINTS})
+find_path(assimp_INCLUDE_DIR        NAMES assimp/postprocess.h assimp/scene.h assimp/version.h assimp/config.h assimp/cimport.h  HINTS ${INCLUDE_HINTS})
+find_library(assimp_LIBRARY_RELEASE NAMES ${LIB_NAMES}                                                                           HINTS ${LIB_HINTS})
+find_library(assimp_LIBRARY_DEBUG   NAMES ${LIB_NAMES_DBG}                                                                       HINTS ${LIB_HINTS})
 
 set(assimp_INCLUDE_DIRS "${assimp_INCLUDE_DIR}")
 mark_as_advanced(assimp_INCLUDE_DIR)
 select_library_configurations(assimp)
 
 if (NOT assimp_INCLUDE_DIRS AND assimp_LIBRARIES)
-	message(FATAL_ERROR "Found Assimp 2. Required version is 3!")
+	message(FATAL_ERROR "Found Assimp 2? Required version is 3! (or we just couldn't find the headers)")
 endif()
 find_package_handle_standard_args(assimp REQUIRED_VARS assimp_LIBRARY assimp_INCLUDE_DIRS)
 

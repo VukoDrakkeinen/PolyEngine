@@ -29,12 +29,12 @@ if (WIN32)
 	include(FindPackageHandleStandardArgs)
 
 	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-		set(OpenAL_ARCH "x64")
+		set(OpenAL_ARCH "Win64")
 	elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 		set(OpenAL_ARCH "Win32")
 	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-	set(OpenAL_ROOT_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/freetype" CACHE PATH "OpenAL root directory")
+	set(OpenAL_ROOT_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/OpenAL" CACHE PATH "OpenAL root directory")
 
 	find_path(OpenAL_INCLUDE_DIR NAMES   NAMES al.h alc.h  HINTS "${OpenAL_ROOT_DIR}/include")
 	find_library(OpenAL_LIBRARY_RELEASE  NAMES OpenAL32    HINTS "${OpenAL_ROOT_DIR}/lib/${OpenAL_ARCH}")
