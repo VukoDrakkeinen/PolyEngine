@@ -49,18 +49,6 @@ if (WIN32)
 	endif(MSVC12)
 
 	set(assimp_ROOT_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/assimp" CACHE PATH "Assimp root directory")
-
-	if(MSVC12 OR MSVC14)
-		function(assimp_COPY_BINARIES TargetDirectory)
-			ADD_CUSTOM_TARGET(AssimpCopyBinaries
-				COMMAND ${CMAKE_COMMAND} -E copy ${assimp_ROOT_DIR}/bin${assimp_ARCH}/assimp-${assimp_MSVC_VERSION}-mtd.dll ${TargetDirectory}/Debug/assimp-${assimp_MSVC_VERSION}-mtd.dll
-				COMMAND ${CMAKE_COMMAND} -E copy ${assimp_ROOT_DIR}/bin${assimp_ARCH}/assimp-${assimp_MSVC_VERSION}-mt.dll 	${TargetDirectory}/Release/assimp-${assimp_MSVC_VERSION}-mt.dll
-				COMMENT "Copying Assimp binaries to '${TargetDirectory}'"
-				VERBATIM
-			)
-		endfunction(assimp_COPY_BINARIES)
-	endif(MSVC12 OR MSVC14)
-
 	set(INCLUDE_HINTS "${assimp_ROOT_DIR}/include")
 	set(LIB_HINTS     "${assimp_ROOT_DIR}/lib/Release/${assimp_ARCH}" "${assimp_ROOT_DIR}/lib/Debug/${assimp_ARCH}")
 	set(LIB_NAMES     "assimp-${assimp_MSVC_VERSION}-mt")

@@ -241,3 +241,4 @@ else(NOT CMAKE_VERSION VERSION_LESS 3.8)
 endif()
 
 #TODO(vuko): install and stuff
+#todo(vuko): source file categories for VS
