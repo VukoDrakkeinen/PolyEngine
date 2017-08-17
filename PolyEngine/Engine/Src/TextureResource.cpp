@@ -4,8 +4,6 @@
 #include "ResourceManager.hpp"
 #include "SOIL/SOIL.h"
 
-#include "Logger.hpp"
-
 using namespace Poly;
 
 //------------------------------------------------------------------------------
@@ -16,8 +14,6 @@ TextureResource::TextureResource(const String& path)
 	{
 		throw ResourceLoadFailedException();
 	}
-
-	gConsole.LogDebug("Loading texture {}: [WxH*C: {}x{}*{}]", path, Width, Height, Channels);
 
 	// Flip Y axis
 	int rowSize = Width*Channels;
@@ -31,7 +27,6 @@ TextureResource::TextureResource(const String& path)
 
 	TextureProxy = gEngine->GetRenderingDevice()->CreateTexture(Width, Height, eTextureUsageType::DIFFUSE); //HACK, remove deffise from here
 	TextureProxy->SetContent(eTextureDataFormat::RGBA, Image);
-	gConsole.LogDebug("Texture proxy at {}", (void*)TextureProxy.get());
 }
 
 //-----------------------------------------------------------------------------

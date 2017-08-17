@@ -232,10 +232,10 @@ else(NOT CMAKE_VERSION VERSION_LESS 3.8)
 	endforeach()
 	add_custom_target(
 			clang-tidy
-	        COMMAND ${CLANG_TIDY_EXE} -p "${CMAKE_BINARY_DIR}" "${CLANG_TIDY_SOURCES}"
-	        DEPENDS "compile_commands.json"
-	        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-	        COMMAND_EXPAND_LISTS
+			COMMAND ${CLANG_TIDY_EXE} -p "${CMAKE_BINARY_DIR}" "${CLANG_TIDY_SOURCES}"
+			DEPENDS "compile_commands.json"
+			WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+			COMMAND_EXPAND_LISTS
 	)
 
 endif()
