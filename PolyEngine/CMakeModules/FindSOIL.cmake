@@ -28,7 +28,11 @@ include(CMakeFindDependencyMacro)
 include(SelectLibraryConfigurations)
 include(FindPackageHandleStandardArgs)
 
-find_dependency(OpenGL)
+if(NOT CMAKE_VERSION VERSION_GREATER 3.6)
+	find_package(OpenGL REQUIRED)
+else()
+	find_dependency(OpenGL) #note(vuko): for some reason this makes older CMake versions stop processing
+endif()
 
 if (WIN32)
 	if(CMAKE_SIZEOF_VOID_P EQUAL 8)

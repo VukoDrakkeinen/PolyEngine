@@ -34,7 +34,11 @@ else ()
 	pkg_check_modules(PKG_RapidJSON QUIET RapidJSON>=1.0)
 
 	set(RapidJSON_DEFINITIONS ${PKG_RapidJSON_CFLAGS})
-	set(INCLUDE_HINTS ${PKG_RapidJSON_INCLUDEDIR} ${PKG_RapidJSON_INCLUDE_DIRS})
+	if (PKG_RapidJSON_FOUND)
+		set(INCLUDE_HINTS ${PKG_RapidJSON_INCLUDEDIR} ${PKG_RapidJSON_INCLUDE_DIRS})
+	else()
+		set(INCLUDE_HINTS "${CMAKE_SOURCE_DIR}/ThirdParty/rapidjson/include")
+	endif()
 endif()
 
 find_path(RapidJSON_INCLUDE_DIR  NAMES rapidjson/rapidjson.h  HINTS ${INCLUDE_HINTS})
