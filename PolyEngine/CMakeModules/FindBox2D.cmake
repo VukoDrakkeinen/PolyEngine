@@ -40,7 +40,7 @@ if (WIN32)
 
 	find_path(BOX2D_INCLUDE_DIR NAMES   NAMES Box2D/Box2D.h  HINTS "${BOX2D_ROOT_DIR}/Src")
 	find_library(BOX2D_LIBRARY_RELEASE  NAMES Box2D          HINTS "${BOX2D_ROOT_DIR}/lib/Release/${BOX2D_ARCH}")
-	find_library(BOX2D_LIBRARY_DEBUG    NAMES Box2D          HINTS "${BOX2D_ROOT_DIR}/lib/Debug/${BOX2D_ARCH}")
+#	find_library(BOX2D_LIBRARY_DEBUG    NAMES Box2D          HINTS "${BOX2D_ROOT_DIR}/lib/Debug/${BOX2D_ARCH}")    #todo(vuko/muniu): breaks the build; why?
 
 	set(BOX2D_INCLUDE_DIRS "${BOX2D_INCLUDE_DIR}")
 	mark_as_advanced(BOX2D_INCLUDE_DIR)
