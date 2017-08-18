@@ -1,6 +1,5 @@
 #pragma once
 
-#include <epoxy/gl.h>
 #if defined(_WIN32)
 	#include <epoxy/wgl.h>
 #elif defined(__linux__)

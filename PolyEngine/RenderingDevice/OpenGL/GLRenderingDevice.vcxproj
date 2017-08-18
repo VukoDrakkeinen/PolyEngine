@@ -93,6 +93,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\libepoxy\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;epoxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d $(SolutionDir)ThirdParty\libepoxy\bin\x64\epoxy-0.dll $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -106,6 +109,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\libepoxy\lib\Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;epoxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d $(SolutionDir)ThirdParty\libepoxy\bin\Win32\epoxy-0.dll $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -123,6 +129,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\libepoxy\lib\Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;epoxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d $(SolutionDir)ThirdParty\libepoxy\bin\Win32\epoxy-0.dll $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -140,6 +149,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\libepoxy\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;epoxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d $(SolutionDir)ThirdParty\libepoxy\bin\x64\epoxy-0.dll $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Src\BlinnPhongRenderingPass.hpp" />
