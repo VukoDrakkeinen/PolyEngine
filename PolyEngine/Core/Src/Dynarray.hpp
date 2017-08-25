@@ -370,6 +370,8 @@ namespace Poly
 		using Impl::Dynarray<T>::Insert;
 		using Impl::Dynarray<T>::operator=;
 
+		Dynarray() : Impl::Dynarray<T>::Dynarray() {}
+
 		/// <summary>Basic copy constructor</summary>
 		/// <param name="rhs">Reference to Dynarray instance which state should be copied.</param>
 		Dynarray(const Dynarray<T>& rhs) { Copy(rhs); }
