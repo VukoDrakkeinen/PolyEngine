@@ -8,7 +8,7 @@ namespace Poly
 {
 	namespace Impl
 	{
-		template<typename T>
+		template<typename T, bool = false>
 		class Dynarray : public BaseObject<>
 		{
 		public:
@@ -356,86 +356,98 @@ namespace Poly
 			size_t Capacity = 0;
 			T* Data = nullptr;
 		};
+
+		template<typename T>
+		class Dynarray<T, true> : public Dynarray<T, false>
+		{
+		public:
+			using Dynarray<T>::Dynarray;
+			using Dynarray<T>::PushBack;
+			using Dynarray<T>::Insert;
+			using Dynarray<T>::operator=;
+
+			Dynarray() : Dynarray<T>::Dynarray() {}
+
+			/// <summary>Basic copy constructor</summary>
+			/// <param name="rhs">Reference to Dynarray instance which state should be copied.</param>
+			Dynarray(const Dynarray& rhs) { Copy(rhs); }
+
+			/// <summary>Basic copy operator</summary>
+			/// <param name="rhs">Reference to Dynarray instance which state should be copied.</param>
+			Dynarray& operator=(const Dynarray& rhs)
+			{
+				this->Clear();
+				Copy(rhs);
+				return *this;
+			}
+
+			/// <summary>
+			/// Copies provided object to the specified location in the dynarray.
+			/// Objects already present that are in position >= idx will be moved one position to the right.
+			/// Insertion with idx > size results in undefined behaviour.
+			/// </summary>
+			/// <param name="idx">Index in which object should be created.</param>
+			/// <param name="obj">Const reference to object that should be copied to the container.</param>
+			void Insert(size_t idx, const T& obj)
+			{
+				HEAVY_ASSERTE(idx <= this->GetSize(), "Index out of bounds!");
+				if (this->Size == this->GetCapacity())
+					this->Enlarge();
+				std::move_backward(this->Begin() + idx, this->End(), this->End() + 1);
+				ObjectLifetimeHelper::CopyCreate(this->Data + idx, obj);
+				++this->Size;
+			}
+
+			/// <summary>Performs insertion to the back of the container.</summary>
+			/// <param name="obj">Const reference to object that should be copied to the container.</param>
+			void PushBack(const T& obj) { Insert(this->GetSize(), obj); }
+
+			/// <summary>Creates dynarray instance from initializer list.</summary>
+			/// <param name="list"></param>
+			Dynarray(const std::initializer_list<T>& list) { PopulateFromInitializerList(list); }
+
+
+			/// <summary>Clears current dynarray content and populates it with content from initializer list.</summary>
+			/// <param name="list"></param>
+			Dynarray& operator=(const std::initializer_list<T>& list)
+			{
+				this->Clear();
+				PopulateFromInitializerList(list);
+				return *this;
+			}
+
+		private:
+			//------------------------------------------------------------------------------
+			void Copy(const Dynarray& rhs)
+			{
+				this->Reserve(rhs.GetSize());
+				for (size_t idx = 0; idx < rhs.GetSize(); ++idx)
+					PushBack(rhs.Data[idx]);
+			}
+
+			//------------------------------------------------------------------------------
+			void PopulateFromInitializerList(const std::initializer_list<T>& list)
+			{
+				this->Reserve(list.size());
+				for (const T& obj : list)
+					PushBack(obj);
+			}
+		};
 	}
 	/// <summary>
 	/// Dynarray is a vector based container thet allocates its memory in one, continous block.
 	/// This should be the goto container for all general purpose usage.
 	/// </summary>
 	template<typename T>
-	class Dynarray : public Impl::Dynarray<T>
+	class Dynarray : public Impl::Dynarray<T, std::is_copy_constructible<T>::value>
 	{
 	public:
-		using Impl::Dynarray<T>::Dynarray;
-		using Impl::Dynarray<T>::PushBack;
-		using Impl::Dynarray<T>::Insert;
-		using Impl::Dynarray<T>::operator=;
+		using Impl::Dynarray<T, std::is_copy_constructible<T>::value>::Dynarray;
+		using Impl::Dynarray<T, std::is_copy_constructible<T>::value>::PushBack;
+		using Impl::Dynarray<T, std::is_copy_constructible<T>::value>::Insert;
+		using Impl::Dynarray<T, std::is_copy_constructible<T>::value>::operator=;
 
-		Dynarray() : Impl::Dynarray<T>::Dynarray() {}
-
-		/// <summary>Basic copy constructor</summary>
-		/// <param name="rhs">Reference to Dynarray instance which state should be copied.</param>
-		Dynarray(const Dynarray<T>& rhs) { Copy(rhs); }
-
-		/// <summary>Basic copy operator</summary>
-		/// <param name="rhs">Reference to Dynarray instance which state should be copied.</param>
-		Dynarray<T>& operator=(const Dynarray<T>& rhs)
-		{
-			this->Clear();
-			Copy(rhs);
-			return *this;
-		}
-
-		/// <summary>
-		/// Copies provided object to the specified location in the dynarray.
-		/// Objects already present that are in position >= idx will be moved one position to the right.
-		/// Insertion with idx > size results in undefined behaviour.
-		/// </summary>
-		/// <param name="idx">Index in which object should be created.</param>
-		/// <param name="obj">Const reference to object that should be copied to the container.</param>
-		void Insert(size_t idx, const T& obj)
-		{
-			HEAVY_ASSERTE(idx <= this->GetSize(), "Index out of bounds!");
-			if (this->Size == this->GetCapacity())
-				this->Enlarge();
-			std::move_backward(this->Begin() + idx, this->End(), this->End() + 1);
-			ObjectLifetimeHelper::CopyCreate(this->Data + idx, obj);
-			++this->Size;
-		}
-
-		/// <summary>Performs insertion to the back of the container.</summary>
-		/// <param name="obj">Const reference to object that should be copied to the container.</param>
-		void PushBack(const T& obj) { Insert(this->GetSize(), obj); }
-
-		/// <summary>Creates dynarray instance from initializer list.</summary>
-		/// <param name="list"></param>
-		Dynarray(const std::initializer_list<T>& list) { PopulateFromInitializerList(list); }
-
-
-		/// <summary>Clears current dynarray content and populates it with content from initializer list.</summary>
-		/// <param name="list"></param>
-		Dynarray<T>& operator=(const std::initializer_list<T>& list)
-		{
-			this->Clear();
-			PopulateFromInitializerList(list);
-			return *this;
-		}
-
-	private:
-		//------------------------------------------------------------------------------
-		void Copy(const Dynarray<T>& rhs)
-		{
-			this->Reserve(rhs.GetSize());
-			for (size_t idx = 0; idx < rhs.GetSize(); ++idx)
-				PushBack(rhs.Data[idx]);
-		}
-
-		//------------------------------------------------------------------------------
-		void PopulateFromInitializerList(const std::initializer_list<T>& list)
-		{
-			this->Reserve(list.size());
-			for (const T& obj : list)
-				PushBack(obj);
-		}
+		Dynarray() : Impl::Dynarray<T, std::is_copy_constructible<T>::value>::Dynarray() {}
 	};
 
 	// std library for each enablers
