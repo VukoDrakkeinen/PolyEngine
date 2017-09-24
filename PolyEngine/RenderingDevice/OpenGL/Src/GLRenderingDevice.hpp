@@ -78,8 +78,8 @@ namespace Poly
 
 		template<typename T, class... Args_t>
 		void RegisterGeometryPassWithArgs(eGeometryRenderPassType type,
-			const std::initializer_list<InputOutputBind>& inputs = {},
-			const std::initializer_list<InputOutputBind>& outputs = {}, Args_t&&... args);
+			const std::initializer_list<InputOutputBind>& inputs,
+			const std::initializer_list<InputOutputBind>& outputs, Args_t&&... args);
 
 		void RegisterPostprocessPass(ePostprocessRenderPassType type, const String& fragShaderName,
 			const std::initializer_list<InputOutputBind>& inputs = {},
