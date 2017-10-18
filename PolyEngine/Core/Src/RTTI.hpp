@@ -24,7 +24,11 @@ RTTI_DECLARE_PRIMITIVE_TYPE(f64)
 //RTTI_DECLARE_PRIMITIVE_TYPE(uint)
 
 namespace Poly {
-	class RTTIBase {
+	struct OverrideWorkaround {
+		virtual Poly::RTTI::IPropertyManager* GetPropertyManager() = 0;
+	};
+
+	class RTTIBase : public OverrideWorkaround {
 		RTTI_DECLARE_TYPE(Poly::RTTIBase) { UNUSED(mgr); }
 	public:
 		// TODO rework this API

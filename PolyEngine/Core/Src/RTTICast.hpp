@@ -9,27 +9,13 @@
 namespace Poly {
 	namespace RTTI {
 		namespace Impl {
-			/**
-			* Empty structure to end recurency
-			*/
 			struct nil_t {};
 
-			/**
-			* Typelist entry
-			*/
-			template<class T, class U = nil_t>
-			struct Typelist {
-				typedef T head;
-				typedef U tail;
-			};
+			template<class TypeHeld, class Next = nil_t> struct Typelist {};
 
 			//--------------------------------------------------------------------------------------
 
-			/**
-			* Template for filling baseClassList
-			*/
-			template<class>
-			struct TypeInfoFromBaseClassList;
+			template<class> struct TypeInfoFromBaseClassList;
 
 			template<>
 			struct TypeInfoFromBaseClassList<Typelist<nil_t>>
@@ -40,7 +26,8 @@ namespace Poly {
 			template<class T, class U>
 			struct TypeInfoFromBaseClassList<Typelist<T, U>>
 			{
-				static void Fill(Dynarray<TypeInfo>& v) {
+				static void Fill(Dynarray<TypeInfo>& v)
+				{
 					v.PushBack(MetaTypeInfo<T>::GetTypeInfo());
 					TypeInfoFromBaseClassList<typename T::baseClassList>::Fill(v);
 					TypeInfoFromBaseClassList<U>::Fill(v);
@@ -54,15 +41,15 @@ namespace Poly {
 		struct BaseClasses {
 		private:
 			// Returns dynarray of TypeInfo if class T has baseClassList, that is filled with TypeInfos of base types for type T
-			template<typename C>
-			static auto RetrieveImpl(int, typename std::enable_if<std::is_fundamental<C>::value>::type* = 0) -> decltype(C::baseClassList, Dynarray<TypeInfo>{}) {
+			template<typename C, typename std::enable_if<std::is_fundamental<C>::value>::type* = nullptr>
+			static auto RetrieveImpl(int) -> decltype(C::baseClassList, Dynarray<TypeInfo>{}) {
 				Dynarray<TypeInfo> result;
 				Impl::TypeInfoFromBaseClassList<typename C::baseClassList>::Fill(result);
 				return result;
 			}
 
 			// Returns dynarray of TypeInfo if class T has no baseClassList, that is empty
-			template<typename C>
+			template<typename>
 			static auto RetrieveImpl(...) -> decltype(Dynarray<TypeInfo>{}) {
 				return Dynarray<TypeInfo>();
 			}
@@ -82,8 +69,8 @@ T1 rtti_cast(T2 object) {
 	STATIC_ASSERTE(std::is_pointer<T2>::value, "input type must be a pointer"); // input type must be a pointer
 	STATIC_ASSERTE(Poly::RTTI::Impl::HasGetTypeInfoFunc<T2>::value, "no TypeInfo defined");
 
-	typedef typename std::remove_pointer<T1>::type ReturnType;
-	typedef typename std::remove_pointer<T2>::type InputType;
+	using ReturnType = typename std::remove_pointer<T1>::type;
+	using InputType  = typename std::remove_pointer<T2>::type;
 	STATIC_ASSERTE((std::is_const<ReturnType>::value && std::is_const<InputType>::value) ||
 		(!std::is_const<ReturnType>::value && std::is_const<InputType>::value) ||
 		(!std::is_const<ReturnType>::value && !std::is_const<InputType>::value), "Return type must have const qualifier!");
@@ -115,26 +102,26 @@ Poly::RTTI::TypeInfo getTypeInfoFromInstance(const T*) {
 }
 
 // Declares type with no base class
-#define RTTI_DECLARE_TYPE(T) \
-public: \
-RTTI_GENERATE_TYPE_INFO(T)\
-virtual Poly::RTTI::TypeInfo GetTypeInfo() const { return getTypeInfoFromInstance(this); } \
-typedef TYPE_LIST() baseClassList;\
-RTTI_GENERATE_PROPERTY_LIST(T)
+#define RTTI_DECLARE_TYPE(T)                                                                                                                                                                           \
+	public:                                                                                                                                                                                            \
+	RTTI_GENERATE_TYPE_INFO(T)                                                                                                                                                                         \
+	virtual Poly::RTTI::TypeInfo GetTypeInfo() const { return getTypeInfoFromInstance(this); }                                                                                                         \
+	using baseClassList = TYPE_LIST();                                                                                                                                                                 \
+	RTTI_GENERATE_PROPERTY_LIST(T)
 
 
 // Declares type with one base class
-#define RTTI_DECLARE_TYPE_DERIVED(T,A) \
-public: \
-RTTI_GENERATE_TYPE_INFO(T)\
-Poly::RTTI::TypeInfo GetTypeInfo() const override { return getTypeInfoFromInstance(this); } \
-typedef TYPE_LIST_1(A) baseClassList;\
-RTTI_GENERATE_PROPERTY_LIST(T)
+#define RTTI_DECLARE_TYPE_DERIVED(T, A)                                                                                                                                                                \
+	public:                                                                                                                                                                                            \
+	RTTI_GENERATE_TYPE_INFO(T)                                                                                                                                                                         \
+	Poly::RTTI::TypeInfo GetTypeInfo() const override { return getTypeInfoFromInstance(this); }                                                                                                        \
+	using baseClassList = TYPE_LIST_1(A);                                                                                                                                                              \
+	RTTI_GENERATE_PROPERTY_LIST(T)
 
 // Declares type with two base classes. Disabled for now.
 /*#define RTTI_DECLARE_TYPE_DERIVED2(T,A,B) \
 public: \
 RTTI_GENERATE_TYPE_INFO(T)\
 Poly::RTTI::TypeInfo GetTypeInfo() const override { return getTypeInfoFromInstance(this); } \
-typedef TYPE_LIST_2(A,B) baseClassList;\
+using baseClassList = TYPE_LIST_2(A,B) baseClassList;\
 RTTI_GENERATE_PROPERTY_LIST(T)*/

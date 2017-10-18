@@ -17,6 +17,7 @@ set(POLYTESTS_SRCS
 	Src/VectorTests.cpp
 	Src/Vector2fTests.cpp
 	Src/Vector2iTests.cpp
+	Src/RTTITests.cpp
 	Src/main.cpp
 )
 

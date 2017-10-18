@@ -51,7 +51,7 @@ namespace Poly {
 		  //--------------------------------------------------------------------------
 		class CORE_DLLEXPORT TypeInfo {
 		public:
-			typedef long long TypeId;
+			using TypeId = long long;
 
 			constexpr TypeInfo() : m_id(0) {}
             constexpr TypeInfo(const TypeInfo& rhs) : m_id(rhs.m_id) {}
